@@ -1,0 +1,4 @@
+{
+    "name":"${DS.name}",
+    "properties":${DS.props.toJsonValue()}
+}
