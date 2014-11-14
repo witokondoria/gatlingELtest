@@ -1,9 +1,0 @@
-[{
-    "DS": {
-        "name":"JDBCDS",
-        "props":{       
-	        "userName":"username",
-	        "password":"password"
-	        }
-         }
-}]
