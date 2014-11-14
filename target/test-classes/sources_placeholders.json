@@ -1,8 +1,8 @@
 [{
     "DS": {
-        "name":"${JDBCDS}",
+        "name":"JDBCDS",
         "props":{       
-	        "userName":"user",
+	        "userName":"username",
 	        "password":"password"
 	        }
          }

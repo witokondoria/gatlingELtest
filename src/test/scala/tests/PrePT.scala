@@ -11,25 +11,32 @@ class PrePT extends Simulation with Common{
 
   object RequiredElement {
 
-
     val createDS = exec(http("POST /")
         .post("/")
         .body(ELFileBody("DS.txt")).asJSON
-        .check(jsonPath("$.ds.id")
+        .check(jsonPath("$.dataSource.id")
           .saveAs("DSID")))
       .exitHereIfFailed
+
   }
 
-  val feeder = jsonFile("../user-files/request-bodies/sources_placeholders.json")
+  val placeholded = new Scanner(new File("target/test-classes/sources_placeholders.json"));
+  val replaced = new PrintWriter("target/test-classes/sources.json");
+  var sources = placeholded.useDelimiter("\\A").next()
+
+  sources = sources.replaceAll("JDBCDS", jdbcds)
+
+  replaced.println(sources);
+  placeholded.close();
+  replaced.close();
+
+  val feeder = jsonFile("sources.json")
 
   val users = scenario("Pre-requirements")
     .foreach(feeder.records, "record") {
       exec(flattenMapIntoAttributes("${record}"))
       .exec(
-        session => session.set("JDBCDS", jdbcds)
-      )
-      .exec(
-        RequiredElement.createDS
+	RequiredElement.createDS
       )}
 
   setUp(
