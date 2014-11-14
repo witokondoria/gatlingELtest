@@ -20,22 +20,14 @@ class PrePT extends Simulation with Common{
       .exitHereIfFailed
   }
 
-
-  val placeholded = new Scanner(new File("../user-files/request-bodies/sources_placeholders.json"));
-  val replaced = new PrintWriter("../user-files/request-bodies/sources.json");
-  var sources = placeholded.useDelimiter("\\A").next()
-
-  sources = sources.replaceAll("JDBCDS", jdbcds)
-
-  replaced.println(sources);
-  placeholded.close();
-  replaced.close();
-
-  val feeder = jsonFile("../user-files/request-bodies/sources.json")
+  val feeder = jsonFile("../user-files/request-bodies/sources_placeholders.json")
 
   val users = scenario("Pre-requirements")
     .foreach(feeder.records, "record") {
       exec(flattenMapIntoAttributes("${record}"))
+      .exec(
+        session => session.set("JDBCDS", jdbcds)
+      )
       .exec(
         RequiredElement.createDS
       )}
